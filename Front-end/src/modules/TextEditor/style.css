@@ -1,0 +1,72 @@
+*{
+    border: none!important;
+}
+html{
+    padding: 1em;
+    background-image: linear-gradient(rgba(129, 69, 0, 0.8),rgba(253, 192, 92, 0.8));
+    background-image: linear-gradient(rgba(231, 110, 255, 0.4),rgba(83, 147, 212, 0.4));
+    background-repeat: no-repeat;
+    min-height: 100%;
+}
+.ql-toolbar{
+    max-width: 65em;
+    border-radius: 0.2em;
+    margin: auto;
+    position: sticky;
+    border: none;
+    box-shadow: 0  0.1em 1em rgba(00,00,00,0.4);
+    background-color:azure;
+    top: 0;
+    z-index: 1;
+}
+.hidden{
+  visibility: hidden;
+}
+.ql-container{
+  margin: 2em;
+  border: none;
+  border-radius: 0.4em;
+  box-shadow: 0 1em 2em 1em rgba(00,00,00,0.2);
+  margin: 7em auto 4em;
+  max-width: 80em;
+  background-color:azure;
+}
+.ql-editor{
+  height: 90%;
+  padding: 4em;
+}
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  width: 10px;
+  border-radius: 10px;
+  background:rgba(00,00,00,0.2); 
+  
+}
+   
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.title{
+  background-color:azure;
+  padding: 8px;
+  font-size:32px;
+  border-radius: 5px;
+  transform: translateY(3.5em);
+  opacity: 60%;
+  }
+  .title:focus{
+    box-shadow: 0  0.1em 1em rgba(00,00,00,0.4);
+    opacity: 100%;
+    outline: none;
+  }

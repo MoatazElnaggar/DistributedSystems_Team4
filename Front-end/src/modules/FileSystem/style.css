@@ -1,0 +1,61 @@
+.fileSystem{
+    width: 80vw;
+    margin: 8vw auto 5em;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: start;
+    align-items: center;
+}
+.fileContainer{
+    display: flex;
+    flex-direction: column;
+    margin: 1em 0.8em;
+    max-width: 5em;
+    background-color: #f3f3f3;
+    padding: 1em 2em;
+    border-radius: 10px;
+    box-shadow: 0.5em 0.5em 0.6em 0.5em rgba(1,1,1,0.2);
+    height: 10em;
+}
+
+.fileimg{
+    margin: 1em 1em 0;
+    width: 3em;
+    min-height: 4em;
+    overflow: hidden;
+}
+.contextMenu{
+    box-shadow: 0.5em 0.5em 0.6em 0.5em rgba(1,1,1,0.2);
+    z-index: 2;
+    background-color: #f2f2f2;
+    border-radius: 0.2em;
+    min-width: 8em;
+    position: absolute;
+    animation: renderMenu;
+    transition: all ease-in-out 0.3s;
+}
+.contextMenuItem{
+    z-index: 3;
+    padding: 0.5em;
+    cursor: pointer;
+}
+.contextMenuItemRed:hover{
+    border-radius: 0.2em;
+    color:white;
+    background-color: rgba(255, 67, 67, 0.9);
+}
+
+@keyframes renderMenu {
+    from{
+        height: 0!important;
+    }
+    to{
+        height: 4em;
+    }
+}
+a{
+    text-decoration: none;
+    color: #000;
+}
