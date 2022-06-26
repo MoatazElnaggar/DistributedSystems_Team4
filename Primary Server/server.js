@@ -1,5 +1,20 @@
+require("dotenv").config(); // a library enables accessing env vars from .env file
 const socket = require("socket.io");
+const mongoose = require("mongoose");
 const _ = require("lodash");
+//-----------------------------------//
+const Document = require("./documents");
+
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((r) => console.log("Connected to the DB ..."))
+  .catch((e) => console.error(e));
 
 //---------------------------------------------------------------------//
 const PORT = process.env.PORT || 3001;
@@ -13,43 +28,43 @@ const io = socket(PORT, {
   },
 });
 
-let docs = [
-  {
-    _id: "eyrghkjdfas00000000000",
-    title: "Title 1",
-    quillContents: "",
-  },
-  {
-    _id: "eyrghkjdfas11111111111",
-    title: "Title 2",
-    quillContents: "",
-  },
-  {
-    _id: "eyrghkjdfas22222222222",
-    title: "Title 3",
-    quillContents: "",
-  },
-  {
-    _id: "eyrghkjdfas3333333333",
-    title: "Title 3",
-    quillContents: "",
-  },
-  {
-    _id: "eyrghkjdfas4444444444",
-    title: "Title 4",
-    quillContents: "",
-  },
-  {
-    _id: "eyrghkjdfas5555555555",
-    title: "Title 5",
-    quillContents: "",
-  },
-];
+// let docs = [
+//   {
+//     _id: "eyrghkjdfas00000000000",
+//     title: "Title 1",
+//     quillContents: "",
+//   },
+//   {
+//     _id: "eyrghkjdfas11111111111",
+//     title: "Title 2",
+//     quillContents: "",
+//   },
+//   {
+//     _id: "eyrghkjdfas22222222222",
+//     title: "Title 3",
+//     quillContents: "",
+//   },
+//   {
+//     _id: "eyrghkjdfas3333333333",
+//     title: "Title 3",
+//     quillContents: "",
+//   },
+//   {
+//     _id: "eyrghkjdfas4444444444",
+//     title: "Title 4",
+//     quillContents: "",
+//   },
+//   {
+//     _id: "eyrghkjdfas5555555555",
+//     title: "Title 5",
+//     quillContents: "",
+//   },
+// ];
 let rooms = {};
 io.on("connection", (stream) => {
   //-------------------------------------------------------------------//
   stream.on("get-all-docs", async () => {
-    let data = docs;
+    let data = await Document.find();
     data = data.map((d) => _.pick(d, ["_id", "title"]));
     stream.broadcast.emit("recieve-all-docs", data);
   });
@@ -57,15 +72,14 @@ io.on("connection", (stream) => {
 
   //-------------------------------------------------------------------//
   stream.on("create-new-doc", async () => {
-    const doc = {
+    const doc = new Document({
       title: "Untitled Document",
       quillContents: " ",
-      _id: static++
-    };
-    docs.push(doc);
+    });
+    doc.save();
     console.log("Saved document:", doc);
     stream.broadcast.emit("created-new-doc", doc);
-    let data = docs;
+    let data = await Document.find();
     data = data.map((d) => _.pick(d, ["_id", "title"]));
     stream.broadcast.emit("recieve-all-docs", data);
   });
@@ -73,7 +87,8 @@ io.on("connection", (stream) => {
 
   //-------------------------------------------------------------------//
   stream.on("delete-doc", async (docID) => {
-    let data = docs.filter(d => d._id !== docID);
+    await Document.deleteOne({ _id: docID });
+    let data = await Document.find();
     data = data.map((d) => _.pick(d, ["_id", "title"]));
     stream.broadcast.emit("recieve-all-docs", data);
   });
@@ -89,7 +104,7 @@ io.on("connection", (stream) => {
     // console.log("rooms are:", rooms);
     //to get the number of clients in this room
     // const numClients = clients ? clients.size : 0;
-    const doc = docs.find(d => d._id === docID);
+    const doc = await Document.findOne({ _id: docID });
     console.log(doc);
     stream.emit("load-doc", { doc, clientno: rooms[docID] });
     stream.broadcast.to(docID).emit("client-number", rooms[docID]);
@@ -106,7 +121,7 @@ io.on("connection", (stream) => {
     stream.on("save-doc", async ({ title, quillContents }) => {
       doc.title = title || "Untitled Document";
       doc.quillContents = quillContents;
-      docs.push(doc);
+      await doc.save();
       console.log("saved", doc);
       // stream.broadcast.to(docID).emit("saved-doc", "saved");
     });
